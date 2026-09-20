@@ -1,6 +1,8 @@
 from pathlib import Path
 
 from retrieval import find_relevant_paragraphs
+from prompt_builder import build_prompt
+from llm import generate_answer
 
 
 def load_notes():
@@ -39,5 +41,17 @@ while True:
         for paragraph, score in results:
             print(f"相关度：{score:.2f}")
             print(paragraph)
+        relevant_paragraphs = [
+            paragraph for paragraph, _ in results
+        ]
+        prompt = build_prompt(relevant_paragraphs, keyword)
+
+        print("\n准备交给大模型的提示词：")
+        print(prompt)
+        print("\n正在生成答案，请稍候……")
+        answer = generate_answer(prompt)
+
+        print("\n大模型回答：")
+        print(answer)
     else:
         print("没有找到相关内容。")

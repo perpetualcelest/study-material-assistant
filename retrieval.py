@@ -23,7 +23,7 @@ def find_relevant_paragraphs(paragraphs, query, limit=3):
     results = []
 
     for score, paragraph in ranked[:limit]:
-        if score > 0:
+      if score >= 0.05:
             results.append((paragraph, float(score)))
 
     return results
