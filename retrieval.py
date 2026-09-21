@@ -6,8 +6,15 @@ def find_relevant_paragraphs(paragraphs, query, limit=3):
     if not paragraphs or not query.strip():
         return []
 
-    vectorizer = TfidfVectorizer(analyzer="char", ngram_range=(2, 4))
-    vectors = vectorizer.fit_transform(paragraphs + [query])
+    texts = [
+        text for text, source in paragraphs
+    ]
+
+    vectorizer = TfidfVectorizer(
+        analyzer="char",
+        ngram_range=(2, 4),
+    )
+    vectors = vectorizer.fit_transform(texts + [query])
 
     scores = cosine_similarity(
         vectors[-1],
@@ -22,8 +29,10 @@ def find_relevant_paragraphs(paragraphs, query, limit=3):
 
     results = []
 
-    for score, paragraph in ranked[:limit]:
-      if score >= 0.05:
-            results.append((paragraph, float(score)))
+    for score, (paragraph, source) in ranked[:limit]:
+        if score >= 0.05:
+            results.append(
+                (paragraph, float(score), source)
+            )
 
     return results
