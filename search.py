@@ -3,14 +3,20 @@ from pathlib import Path
 from llm import generate_answer
 from notes import load_paragraphs
 from prompt_builder import build_prompt
-from semantic_retrieval import find_semantic_paragraphs
-
+from semantic_retrieval import embed_texts, find_semantic_paragraphs
 
 all_paragraphs = load_paragraphs(Path("data"))
 
+paragraph_texts = [
+    paragraph for paragraph, source in all_paragraphs
+]
+
+print("正在建立资料向量索引，请稍候……")
+paragraph_vectors = embed_texts(paragraph_texts)
+print("资料向量索引建立完成。")
+
 while True:
     keyword = input("请输入问题（输入 q 退出）：").strip().lower()
-
     if keyword == "q":
         print("程序已退出。")
         break
@@ -19,7 +25,11 @@ while True:
         print("问题不能为空。")
         continue
 
-    results = find_semantic_paragraphs(all_paragraphs, keyword)
+    results = find_semantic_paragraphs(
+        all_paragraphs,
+        keyword,
+        paragraph_vectors=paragraph_vectors,
+    )
 
     if results:
         print("找到了相关内容：")
