@@ -11,6 +11,8 @@ def split_text(text, chunk_size=500, overlap=50):
         text[start:start + chunk_size]
         for start in range(0, len(text), step)
     ]
+
+
 def load_paragraphs(data_directory):
     paragraphs = []
 
@@ -20,7 +22,7 @@ def load_paragraphs(data_directory):
         for paragraph in text.split("\n\n"):
             paragraph = paragraph.strip()
 
-                       if paragraph:
+            if paragraph:
                 chunks = split_text(paragraph)
 
                 for chunk in chunks:
