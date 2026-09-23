@@ -15,7 +15,7 @@ class NotesTest(unittest.TestCase):
         self.assertIn("ai.txt", sources)
         self.assertIn("notes.txt", sources)
 
-     def test_splits_text_with_overlap(self):
+    def test_splits_text_with_overlap(self):
         chunks = split_text(
             "ABCDEFGHIJKL",
             chunk_size=6,
@@ -29,4 +29,4 @@ class NotesTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main() 
+    unittest.main()

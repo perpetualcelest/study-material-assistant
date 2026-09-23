@@ -1,9 +1,10 @@
 from pathlib import Path
 
-from retrieval import find_relevant_paragraphs
-from prompt_builder import build_prompt
 from llm import generate_answer
 from notes import load_paragraphs
+from prompt_builder import build_prompt
+from semantic_retrieval import find_semantic_paragraphs
+
 
 all_paragraphs = load_paragraphs(Path("data"))
 
@@ -18,7 +19,7 @@ while True:
         print("问题不能为空。")
         continue
 
-    results = find_relevant_paragraphs(all_paragraphs, keyword)
+    results = find_semantic_paragraphs(all_paragraphs, keyword)
 
     if results:
         print("找到了相关内容：")
@@ -28,7 +29,7 @@ while True:
             print(f"相关度：{score:.2f}")
             print(paragraph)
 
-                relevant_paragraphs = [
+        relevant_paragraphs = [
             f"[来源：{source}]\n{paragraph}"
             for paragraph, score, source in results
         ]
@@ -36,11 +37,13 @@ while True:
 
         print("\n准备交给大模型的提示词：")
         print(prompt)
+
         print("\n正在生成答案，请稍候……")
         answer = generate_answer(prompt)
 
         print("\n大模型回答：")
         print(answer)
+
         sources = []
 
         for paragraph, score, source in results:
