@@ -3,7 +3,8 @@ from pathlib import Path
 from llm import generate_answer
 from notes import load_paragraphs
 from prompt_builder import build_prompt
-from semantic_retrieval import embed_texts, find_semantic_paragraphs
+from embedding_cache import load_or_create_vectors
+from semantic_retrieval import find_semantic_paragraphs
 
 all_paragraphs = load_paragraphs(Path("data"))
 
@@ -12,7 +13,10 @@ paragraph_texts = [
 ]
 
 print("正在建立资料向量索引，请稍候……")
-paragraph_vectors = embed_texts(paragraph_texts)
+paragraph_vectors = load_or_create_vectors(
+    paragraph_texts,
+    Path(".cache") / "embeddings.json",
+)
 print("资料向量索引建立完成。")
 
 while True:
